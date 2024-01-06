@@ -2,6 +2,7 @@ package com.ecommerce.controller;
 
 import com.ecommerce.entity.OrderDetail;
 import com.ecommerce.entity.OrderInput;
+import com.ecommerce.entity.TransactionDetails;
 import com.ecommerce.service.OrderDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,8 +18,8 @@ public class OrderDetailController {
 
     @PreAuthorize("hasRole('User')")
     @PostMapping({"/placeOrder/{isSingleProductCheckout}"})
-    public void placeOrder(@PathVariable(name="isSingleProductCheckout") boolean isSingleProductCheckout, @RequestBody OrderInput orderInput) {
-        orderDetailService.placeOrder(orderInput,isSingleProductCheckout);
+    public void placeOrder(@PathVariable(name = "isSingleProductCheckout") boolean isSingleProductCheckout, @RequestBody OrderInput orderInput) {
+        orderDetailService.placeOrder(orderInput, isSingleProductCheckout);
     }
 
     @PreAuthorize("hasRole('User')")
@@ -29,13 +30,19 @@ public class OrderDetailController {
 
     @PreAuthorize("hasRole('Admin')")
     @GetMapping({"/getAllOrderDetails/{status}"})
-    public List<OrderDetail> getAllOrderDetails(@PathVariable(name="status") String status) {
+    public List<OrderDetail> getAllOrderDetails(@PathVariable(name = "status") String status) {
         return orderDetailService.getAllOrderDetails(status);
     }
 
     @PreAuthorize("hasRole('Admin')")
     @GetMapping({"/markOrderAsDelivered/{orderId}"})
-    public void markOrderAsDelivered(@PathVariable(name= "orderId")Integer orderId) {
+    public void markOrderAsDelivered(@PathVariable(name = "orderId") Integer orderId) {
         orderDetailService.markOrderAsDelivered(orderId);
+    }
+
+    @PreAuthorize("hasRole('User')")
+    @GetMapping({"/createTransaction/{amount}"})
+    public TransactionDetails createTransaction(@PathVariable(name = "amount") Double amount) {
+        return orderDetailService.createTransaction(amount);
     }
 }
